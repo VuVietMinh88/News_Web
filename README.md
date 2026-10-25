@@ -1,48 +1,70 @@
 ﻿# News Web — Đề 19: Website Tin tức / Cổng thông tin
 
 ## Mục tiêu
+Triển khai website tin tức bằng Docker Compose, có reverse proxy,
+monitoring, logging và hardening có kiểm chứng.
 
-Triển khai website tin tức WordPress bằng Docker Compose, có database,
-reverse proxy, monitoring, logging và các biện pháp hardening có kiểm chứng.
+## Môi trường
+- Windows 11, Docker Desktop, Linux containers trên WSL 2.
+- Terminal PowerShell.
+- Demo trên localhost.
 
-## Môi trường thực hành
+## Trạng thái đã kiểm thử
+- WordPress kết nối MySQL thành công.
+- Admin đăng nhập, tạo danh mục, đăng và sửa bài.
+- Khách đọc được ba bài mẫu.
+- Bài thử được đưa vào thùng rác và không còn công khai.
+- MySQL và phpMyAdmin truy vấn được dữ liệu WordPress.
+- Dữ liệu vẫn tồn tại sau khi restart MySQL.
 
-- Windows 11.
-- Docker Desktop sử dụng Linux containers trên WSL 2.
-- Terminal: PowerShell.
-- Quản lý dịch vụ bằng lệnh docker compose.
-- Demo bằng trình duyệt trên chính máy triển khai.
-
-## Các thành phần dự kiến
-
-- Website: WordPress.
-- Database: MySQL.
-- Quản trị database: phpMyAdmin.
-- Reverse proxy: Nginx.
-- Monitoring: Prometheus, Grafana và các exporter phù hợp.
-- Logging: Loki và Promtail; sẽ xác minh phiên bản và khả năng tương thích.
-
-## Trạng thái
-
-- Đã kiểm tra kết nối Docker CLI với Docker Engine.
-- Đã kiểm tra lệnh Docker Compose và Git.
-- Đã khởi tạo repository và kiểm tra quy tắc .gitignore.
-- Chưa tạo cấu hình hoặc triển khai các dịch vụ của đề tài.
+Nginx, monitoring và logging chưa được triển khai tại mốc này.
 
 ## Cách chạy
+Mở PowerShell trong thư mục chứa docker-compose.yml.
+Yêu cầu Docker Desktop đang chạy Linux containers.
 
-Chưa có hướng dẫn chạy ứng dụng vì cấu hình triển khai chưa được tạo
-và kiểm thử. Mục này sẽ được cập nhật theo từng mốc thực hành.
+Chỉ trên lần chuẩn bị đầu tiên, khi chưa có .env:
+```powershell
+Copy-Item .env.example .env
+notepad .env
+```
 
-## Quản lý thông tin nhạy cảm
+Thay các giá trị CHANGE_ME bằng hai mật khẩu mạnh, khác nhau.
+Không ghi đè .env hiện có.
 
-Không commit file .env thực tế, mật khẩu, private key, dữ liệu runtime
-hoặc bản sao lưu database. File .env.example chỉ chứa cấu hình mẫu,
-không chứa thông tin bí mật thật.
+Khởi động:
+```powershell
+docker compose up -d
+docker compose ps
+```
 
-## Các mốc triển khai dự kiến
+Truy cập tại mốc hiện tại:
+- WordPress: http://localhost:8080
+- Admin: http://localhost:8080/wp-admin/
+- phpMyAdmin: http://localhost:8081
 
-1. WordPress, MySQL, phpMyAdmin và Nginx Reverse Proxy.
-2. Prometheus, Grafana và metrics thực tế.
-3. Loki, Promtail và truy vấn LogQL.
-4. Hoàn thiện hardening, kiểm thử, minh chứng và báo cáo.
+Trên volume trống, hoàn tất cài đặt WordPress qua trình duyệt.
+Đăng nhập phpMyAdmin bằng MYSQL_USER và MYSQL_PASSWORD trong .env.
+Bài viết và tài khoản thực hành nằm trong database, không nằm trong Git.
+
+Dừng:
+```powershell
+docker compose stop
+```
+
+## Lưu trữ và bảo mật
+- Named volume mysql_data lưu database.
+- Named volume wordpress_data lưu file WordPress.
+- MySQL không publish cổng ra Windows.
+- WordPress và phpMyAdmin chỉ publish trên 127.0.0.1.
+- Network database được cấu hình internal.
+- Tài khoản ứng dụng chỉ được cấp quyền trên database news_db.
+- Không commit .env, mật khẩu thật, private key hoặc backup database.
+- Thay .env không tự đổi mật khẩu MySQL đã khởi tạo.
+- Không xóa volume khi chưa có backup và chưa xác định dữ liệu sẽ mất.
+
+## Các mốc tiếp theo
+1. Nginx Reverse Proxy và security headers.
+2. Prometheus, Grafana và exporters.
+3. Loki, Promtail và ba truy vấn LogQL.
+4. Kiểm thử tổng thể, lưu minh chứng và hoàn thiện báo cáo.
