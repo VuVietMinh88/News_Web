@@ -68,3 +68,7 @@ docker compose stop
 2. Prometheus, Grafana và exporters.
 3. Loki, Promtail và ba truy vấn LogQL.
 4. Kiểm thử tổng thể, lưu minh chứng và hoàn thiện báo cáo.
+
+## Moc Nginx
+Da bo sung Nginx reverse proxy tai localhost:8080. WordPress khong publish cong truc tiep. Cau hinh co security headers va endpoint stub_status noi bo.
+
