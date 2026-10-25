@@ -1,0 +1,21 @@
+﻿# Cau hinh chua thong tin nhay cam
+.env
+.env.*
+!.env.example
+secrets/
+*.key
+*.pem
+*.pfx
+*.p12
+
+# Du lieu runtime va ban sao luu
+data/
+backups/
+*.sql
+*.sql.gz
+*.log
+
+# File tam cua he dieu hanh
+Thumbs.db
+Desktop.ini
+.DS_Store
